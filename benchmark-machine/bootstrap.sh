@@ -8,18 +8,18 @@ echo '--------------------------------------------------------------------'
 
 sudo apt update
 
-sudo apt install gcc cmake clang g++ gcc-multilib g++-multilib build-essential git libboost-all-dev libgmp3-dev libgmp-dev libssl-dev libprocps-dev pkg-config perl -y
+sudo apt install gcc cmake clang g++ gcc-multilib g++-multilib build-essential git libboost-all-dev libgmp3-dev libgmp-dev libssl-dev libprocps-dev pkg-config perl unzip -y
 
 echo '--------------------------------------------------------------------'
 echo 'START MIRACL INSTALL'
 echo '--------------------------------------------------------------------'
 
 #install MIRACL
-git clone https://github.com/miracl/MIRACL.git
-mkdir MIRACLFLAT
-find ./MIRACL -type f -exec mv -f -t ./MIRACLFLAT '{}' +
-cd MIRACLFLAT
-sudo bash linux
+mkdir miracl
+cd miracl
+wget https://github.com/miracl/MIRACL/archive/master.zip
+unzip -j -aa -L -o miracl.zip
+sudo bash linux64
 cd ..
 
 echo '--------------------------------------------------------------------'
