@@ -1,8 +1,5 @@
-/*
- * g++ -O2 miracl_benchmark_poly.cc ../home/vagrant/miracl/polymod.o ../home/vagrant/miracl/poly.o ../home/vagrant/miracl/ecn.o ../home/vagrant/miracl/crt.o ../home/vagrant/miracl/zzn.o ../home/vagrant/miracl/big.o ../home/vagrant/miracl/miracl.a -I../home/vagrant/miracl -std=c++11 -isystem ../home/vagrant/benchmark/include/ -lbenchmark -lpthread -L../home/vagrant/benchmark/build/src -o mybench
- * 
- * Program to calculate factorials.
- */
+//g++ -O2 miracl_benchmark_poly.cc /home/vagrant/miracl/polymod.o /home/vagrant/miracl/poly.o /home/vagrant/miracl/ecn.o /home/vagrant/miracl/crt.o /home/vagrant/miracl/zzn.o /home/vagrant/miracl/big.o /home/vagrant/miracl/miracl.a -I/home/vagrant/miracl -std=c++11 -isystem /home/vagrant/benchmark/include/ -lbenchmark -lpthread -L/home/vagrant/benchmark/build/src -o miracl_benchmark_poly.o
+
 extern "C"
 {
     #include "miracl.h"
