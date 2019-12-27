@@ -20,6 +20,9 @@ cd miracl
 wget https://github.com/miracl/MIRACL/archive/master.zip
 unzip -j -aa -L -o miracl.zip
 sudo bash linux64
+g++ -c -m64 -O poly2.cpp
+g++ -c -m64 -O poly2Mod.cpp
+g++ -c -m64 -O gf2m.cpp
 cd ..
 
 echo '--------------------------------------------------------------------'
