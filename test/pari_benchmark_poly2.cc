@@ -2,7 +2,6 @@
 
 #include <pari/pari.h>
 #include <benchmark/benchmark.h>
-#include <iostream>
 
 using namespace std;
 
@@ -83,9 +82,9 @@ static void BM_PolynomField2_MultiplicativeInversion(benchmark::State& state, in
     {
         F2x_set(modPol, *i);
     }
-    
+
     for (auto _ : state) {
-        F2xq_inv(basePol, modPol)
+        F2xq_inv(basePol, modPol);
     }
 }
 
