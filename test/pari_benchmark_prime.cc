@@ -1,4 +1,4 @@
-//g++ -O2 pari_benchmark.cc -std=c++11 -isystem /home/vagrant/benchmark/include/ -lbenchmark -lpthread -L/home/vagrant/benchmark/build/src -lpari -o pari_benchmark.o
+//g++ -O2 pari_benchmark_prime.cc -std=c++11 -isystem /home/vagrant/benchmark/include/ -lbenchmark -lpthread -L/home/vagrant/benchmark/build/src -lpari -o pari_benchmark_prime.o
 
 #include <pari/pari.h>
 #include <benchmark/benchmark.h>
