@@ -3,22 +3,20 @@
 #include <pari/pari.h>
 #include <benchmark/benchmark.h>
 
-using namespace std;
-
 static void BM_PolynomField2_Addition(benchmark::State& state, initializer_list<int> firstPolIndexOfOnes, long firstPolDegree, initializer_list<int> secondPolIndexOfOnes, long secondPolDegree)
 {
-    GEN firstPol = monomial_F2x(firstPolDegree, 1);
+    GEN firstPol = monomial_F2x(firstPolDegree, 0);
     for(initializer_list<int>::iterator i = firstPolIndexOfOnes.begin(); i < firstPolIndexOfOnes.end(); i++)
     {
         F2x_set(firstPol, *i);
     }
 
-    GEN secondPol = monomial_F2x(secondPolDegree, 1);
+    GEN secondPol = monomial_F2x(secondPolDegree, 0);
     for(initializer_list<int>::iterator i = secondPolIndexOfOnes.begin(); i < secondPolIndexOfOnes.end(); i++)
     {
         F2x_set(secondPol, *i);
     }
-    
+
     for (auto _ : state) {
         F2x_add(firstPol, secondPol);
     }
@@ -27,19 +25,19 @@ static void BM_PolynomField2_Addition(benchmark::State& state, initializer_list<
 
 static void BM_PolynomField2_Multiplication(benchmark::State& state, initializer_list<int> firstPolIndexOfOnes, long firstPolDegree, initializer_list<int> secondPolIndexOfOnes, long secondPolDegree, initializer_list<int> modPolIndexOfOnes, long modPolDegree)
 {
-    GEN firstPol = monomial_F2x(firstPolDegree, 1);
+    GEN firstPol = monomial_F2x(firstPolDegree, 0);
     for(initializer_list<int>::iterator i = firstPolIndexOfOnes.begin(); i < firstPolIndexOfOnes.end(); i++)
     {
         F2x_set(firstPol, *i);
     }
 
-    GEN secondPol = monomial_F2x(secondPolDegree, 1);
+    GEN secondPol = monomial_F2x(secondPolDegree, 0);
     for(initializer_list<int>::iterator i = secondPolIndexOfOnes.begin(); i < secondPolIndexOfOnes.end(); i++)
     {
         F2x_set(secondPol, *i);
     }
 
-    GEN modPol = monomial_F2x(modPolDegree, 1);
+    GEN modPol = monomial_F2x(modPolDegree, 0);
     for(initializer_list<int>::iterator i = modPolIndexOfOnes.begin(); i < modPolIndexOfOnes.end(); i++)
     {
         F2x_set(modPol, *i);
@@ -52,13 +50,13 @@ static void BM_PolynomField2_Multiplication(benchmark::State& state, initializer
 
 static void BM_PolynomField2_Exponentiation(benchmark::State& state, initializer_list<int> basePolIndexOfOnes, long basePolDegree, GEN power, initializer_list<int> modPolIndexOfOnes, long modPolDegree)
 {
-    GEN basePol = monomial_F2x(basePolDegree, 1);
+    GEN basePol = monomial_F2x(basePolDegree, 0);
     for(initializer_list<int>::iterator i = basePolIndexOfOnes.begin(); i < basePolIndexOfOnes.end(); i++)
     {
         F2x_set(basePol, *i);
     }
 
-    GEN modPol = monomial_F2x(modPolDegree, 1);
+    GEN modPol = monomial_F2x(modPolDegree, 0);
     for(initializer_list<int>::iterator i = modPolIndexOfOnes.begin(); i < modPolIndexOfOnes.end(); i++)
     {
         F2x_set(modPol, *i);
@@ -71,13 +69,13 @@ static void BM_PolynomField2_Exponentiation(benchmark::State& state, initializer
 
 static void BM_PolynomField2_MultiplicativeInversion(benchmark::State& state, initializer_list<int> basePolIndexOfOnes, long basePolDegree, initializer_list<int> modPolIndexOfOnes, long modPolDegree)
 {
-    GEN basePol = monomial_F2x(basePolDegree, 1);
+    GEN basePol = monomial_F2x(basePolDegree, 0);
     for(initializer_list<int>::iterator i = basePolIndexOfOnes.begin(); i < basePolIndexOfOnes.end(); i++)
     {
         F2x_set(basePol, *i);
     }
 
-    GEN modPol = monomial_F2x(modPolDegree, 1);
+    GEN modPol = monomial_F2x(modPolDegree, 0);
     for(initializer_list<int>::iterator i = modPolIndexOfOnes.begin(); i < modPolIndexOfOnes.end(); i++)
     {
         F2x_set(modPol, *i);
