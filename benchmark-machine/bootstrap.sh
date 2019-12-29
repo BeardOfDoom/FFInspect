@@ -18,7 +18,7 @@ echo '--------------------------------------------------------------------'
 mkdir miracl
 cd miracl
 wget https://github.com/miracl/MIRACL/archive/master.zip
-unzip -j -aa -L -o miracl.zip
+sudo unzip -j -aa -L -o master.zip
 sudo bash linux64
 g++ -c -m64 -O poly2.cpp
 g++ -c -m64 -O poly2Mod.cpp
