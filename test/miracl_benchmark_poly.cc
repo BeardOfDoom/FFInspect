@@ -10,7 +10,7 @@ extern "C"
 #include <fstream>
 #include <vector>
 #include <string>
-#include <sstream> 
+#include <sstream>
 
 typedef struct GeneralPolynomialElement
 {
@@ -23,6 +23,8 @@ Variable x;
 Miracl miraclPrecision=1000;
 miracl *mip=&miraclPrecision;
 
+int p;
+int q;
 vector<GeneralPolynomialElement> irreduciblePolynomial;
 vector<GeneralPolynomialElement> polynomialA;
 vector<GeneralPolynomialElement> polynomialB;
@@ -33,7 +35,7 @@ string reducedBenchmarkExponent;
 //GF(p^q) TESTS
 
 //TODO test
-Poly generalPolynomialToMiraclPoly(vector<GeneralPolynomialElement> generalPolynomial)
+Poly generalPolynomialToMiraclPolynomial(vector<GeneralPolynomialElement> generalPolynomial)
 {
     Poly miraclPolynomial;
     for(int i = 0; i < generalPolynomial.size(); i++)
@@ -90,46 +92,46 @@ static void BM_PolynomField_MultiplicativeInversion(benchmark::State& state, Pol
 BENCHMARK_CAPTURE(
     BM_PolynomField_Addition,
     basic_addition_miracl,
-    generalPolynomialToMiraclPoly(polynomialA),
-    generalPolynomialToMiraclPoly(polynomialB)
+    generalPolynomialToMiraclPolynomial(polynomialA),
+    generalPolynomialToMiraclPolynomial(polynomialB)
 );
 
 BENCHMARK_CAPTURE(
     BM_PolynomField_Scalar_Multiplication,
     basic_scalar_multiplication,
-    generalPolynomialToMiraclPoly(polynomialA),
+    generalPolynomialToMiraclPolynomial(polynomialA),
     Big((char*)scalar.c_str())
 );
 
 BENCHMARK_CAPTURE(
     BM_PolynomField_Multiplication,
     basic_multiplication_miracl,
-    generalPolynomialToMiraclPoly(polynomialA),
-    generalPolynomialToMiraclPoly(polynomialB),
-    generalPolynomialToMiraclPoly(irreduciblePolynomial)
+    generalPolynomialToMiraclPolynomial(polynomialA),
+    generalPolynomialToMiraclPolynomial(polynomialB),
+    generalPolynomialToMiraclPolynomial(irreduciblePolynomial)
 );
 
 BENCHMARK_CAPTURE(
     BM_PolynomField_Exponentiation,
     modular_exponentiation_with_not_reduced_exponent_miracl,
-    generalPolynomialToMiraclPoly(polynomialA),
+    generalPolynomialToMiraclPolynomial(polynomialA),
     Big((char*)benchmarkExponent.c_str()),
-    generalPolynomialToMiraclPoly(irreduciblePolynomial)
+    generalPolynomialToMiraclPolynomial(irreduciblePolynomial)
 );
 
 BENCHMARK_CAPTURE(
     BM_PolynomField_Exponentiation,
     modular_exponentiation_with_reduced_exponent_miracl,
-    generalPolynomialToMiraclPoly(polynomialA),
+    generalPolynomialToMiraclPolynomial(polynomialA),
     Big((char*)reducedBenchmarkExponent.c_str()),
-    generalPolynomialToMiraclPoly(irreduciblePolynomial)
+    generalPolynomialToMiraclPolynomial(irreduciblePolynomial)
 );
 
 BENCHMARK_CAPTURE(
     BM_PolynomField_MultiplicativeInversion,
     basic_inverse_miracl,
-    generalPolynomialToMiraclPoly(polynomialA),
-    generalPolynomialToMiraclPoly(irreduciblePolynomial)
+    generalPolynomialToMiraclPolynomial(polynomialA),
+    generalPolynomialToMiraclPolynomial(irreduciblePolynomial)
 );
 
 int main(int argc, char** argv)
@@ -141,11 +143,10 @@ int main(int argc, char** argv)
     ifstream benchmarkDataFile;
     benchmarkDataFile.open("benchmark_data.txt");
 
-    int p;
     benchmarkDataFile >> p;
 
-    int q;
     benchmarkDataFile >> q;
+
     getline(benchmarkDataFile, tmp);
 
     polynomialString = "";
