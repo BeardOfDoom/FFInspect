@@ -5,8 +5,13 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char** argv)
 {
+    if(argc != 2)
+    {
+        cout << "Please pass the name of the output file as argument." << endl;
+        cout << "poly_benchmark_data.txt OR poly2_benchmark_data.txt OR prime_benchmark_data.txt" << endl;
+    }
     initGenerator();
     int p = 11;
     int q = 100;
@@ -23,7 +28,7 @@ int main()
     char* reducedExponent = itostr(reducedExponentPari);
 
     ofstream benchmarkDataFile;
-    benchmarkDataFile.open("benchmark_data.txt");
+    benchmarkDataFile.open(argv[1]);
 
     benchmarkDataFile << p << endl;
 

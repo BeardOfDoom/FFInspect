@@ -34,7 +34,6 @@ string reducedBenchmarkExponent;
 
 //GF(p^q) TESTS
 
-//TODO test
 Poly generalPolynomialToMiraclPolynomial(vector<GeneralPolynomialElement> generalPolynomial)
 {
     Poly miraclPolynomial;
@@ -136,61 +135,61 @@ BENCHMARK_CAPTURE(
 
 int main(int argc, char** argv)
 {
-    int coefficient, exponent;
-    string tmp, polynomialString;
-    stringstream polynomialStringStream;
+  int coefficient, exponent;
+  string tmp, polynomialString;
+  stringstream polynomialStringStream;
 
-    ifstream benchmarkDataFile;
-    benchmarkDataFile.open("benchmark_data.txt");
+  ifstream benchmarkDataFile;
+  benchmarkDataFile.open("poly_benchmark_data.txt");
 
-    benchmarkDataFile >> p;
+  benchmarkDataFile >> p;
 
-    benchmarkDataFile >> q;
+  benchmarkDataFile >> q;
 
-    getline(benchmarkDataFile, tmp);
+  getline(benchmarkDataFile, tmp);
 
-    polynomialString = "";
-    getline(benchmarkDataFile, polynomialString);
-    polynomialStringStream << polynomialString;
-    while(!polynomialStringStream.eof())
-    {
-        polynomialStringStream >> coefficient;
-        polynomialStringStream >> exponent;
-        irreduciblePolynomial.push_back({coefficient, exponent});
-    }
-    polynomialStringStream.clear();
+  polynomialString = "";
+  getline(benchmarkDataFile, polynomialString);
+  polynomialStringStream << polynomialString;
+  while(!polynomialStringStream.eof())
+  {
+    polynomialStringStream >> coefficient;
+    polynomialStringStream >> exponent;
+    irreduciblePolynomial.push_back({coefficient, exponent});
+  }
+  polynomialStringStream.clear();
 
-    polynomialString = "";
-    getline(benchmarkDataFile, polynomialString);
-    polynomialStringStream << polynomialString;
-    while(!polynomialStringStream.eof())
-    {
-        polynomialStringStream >> coefficient;
-        polynomialStringStream >> exponent;
-        polynomialA.push_back({coefficient, exponent});
-    }
-    polynomialStringStream.clear();
+  polynomialString = "";
+  getline(benchmarkDataFile, polynomialString);
+  polynomialStringStream << polynomialString;
+  while(!polynomialStringStream.eof())
+  {
+    polynomialStringStream >> coefficient;
+    polynomialStringStream >> exponent;
+    polynomialA.push_back({coefficient, exponent});
+  }
+  polynomialStringStream.clear();
 
-    polynomialString = "";
-    getline(benchmarkDataFile, polynomialString);
-    polynomialStringStream << polynomialString;
-    while(!polynomialStringStream.eof())
-    {
-        polynomialStringStream >> coefficient;
-        polynomialStringStream >> exponent;
-        polynomialB.push_back({coefficient, exponent});
-    }
-    polynomialStringStream.clear();
+  polynomialString = "";
+  getline(benchmarkDataFile, polynomialString);
+  polynomialStringStream << polynomialString;
+  while(!polynomialStringStream.eof())
+  {
+    polynomialStringStream >> coefficient;
+    polynomialStringStream >> exponent;
+    polynomialB.push_back({coefficient, exponent});
+  }
+  polynomialStringStream.clear();
     
-    getline(benchmarkDataFile, scalar);
+  getline(benchmarkDataFile, scalar);
 
-    getline(benchmarkDataFile, benchmarkExponent);
+  getline(benchmarkDataFile, benchmarkExponent);
 
-    getline(benchmarkDataFile, reducedBenchmarkExponent);
+  getline(benchmarkDataFile, reducedBenchmarkExponent);
 
-    benchmarkDataFile.close();
+  benchmarkDataFile.close();
 
-    modulo(Big(p));
-    ::benchmark::Initialize(&argc, argv);
-    ::benchmark::RunSpecifiedBenchmarks();
+  modulo(Big(p));
+  ::benchmark::Initialize(&argc, argv);
+  ::benchmark::RunSpecifiedBenchmarks();
 }

@@ -153,7 +153,7 @@ int main(int argc, char** argv)
     stringstream polynomialStringStream;
 
     ifstream benchmarkDataFile;
-    benchmarkDataFile.open("benchmark_data.txt");
+    benchmarkDataFile.open("poly_benchmark_data.txt");
 
     benchmarkDataFile >> p;
 
