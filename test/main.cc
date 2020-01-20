@@ -7,7 +7,7 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    if(argc != 3 || argc != 4)
+    if(argc != 4)
     {
         cout << "The arguments must be the next:" << endl;
         cout << "First: name of the output (poly_benchmark_data.txt OR poly2_benchmark_data.txt OR prime_benchmark_data.txt)." << endl;
@@ -32,10 +32,11 @@ int main(int argc, char** argv)
     {
         char* p = generatePrimeOfSize(atoi(argv[2]));
 
-        GEN numberA = generateNumberInRange(strtoi(p));
-        GEN numberB = generateNumberInRange(strtoi(p));
+        char* numberA = generateNumberInRange(strtoi(p));
+        char* numberB = generateNumberInRange(strtoi(p));
 
         GEN pPari = strtoi(p);
+        GEN exponentPari = strtoi(exponent);
         GEN reducedExponentPari = modii(exponentPari, subiu(pPari, 1));
         reducedExponent = itostr(reducedExponentPari);
 
