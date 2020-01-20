@@ -41,8 +41,6 @@ int main(int argc, char** argv)
 
         benchmarkDataFile << p << endl;
 
-        benchmarkDataFile << q << endl;
-
         benchmarkDataFile << numberA << endl;
 
         benchmarkDataFile << numberB << endl;
