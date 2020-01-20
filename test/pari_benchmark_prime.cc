@@ -14,28 +14,28 @@ string numberB;
 string benchmarkExponent;
 string reducedBenchmarkExponent;
 
-static void BM_PARI_PrimeField_Addition(benchmark::State& state, GEN firstNumer, GEN secondNumber, GEN mod)
+static void BM_PrimeField_Addition(benchmark::State& state, GEN firstNumer, GEN secondNumber, GEN mod)
 {
     for (auto _ : state) {
         Fp_add(firstNumer, secondNumber, mod);
     }
 }
 
-static void BM_PARI_PrimeField_Multiplication(benchmark::State& state, GEN firstNumer, GEN secondNumber, GEN mod)
+static void BM_PrimeField_Multiplication(benchmark::State& state, GEN firstNumer, GEN secondNumber, GEN mod)
 {
     for (auto _ : state) {
         Fp_mul(firstNumer, secondNumber, mod);
     }
 }
 
-static void BM_PARI_PrimeField_Exponentiation(benchmark::State& state, GEN base, GEN power, GEN mod)
+static void BM_PrimeField_Exponentiation(benchmark::State& state, GEN base, GEN power, GEN mod)
 {
     for (auto _ : state) {
         Fp_pow(base, power, mod);
     }
 }
 
-static void BM_PARI_PrimeField_MultiplicativeInversion(benchmark::State& state, GEN base, GEN mod)
+static void BM_PrimeField_MultiplicativeInversion(benchmark::State& state, GEN base, GEN mod)
 {
     for (auto _ : state) {
         Fp_inv(base, mod);
@@ -43,7 +43,7 @@ static void BM_PARI_PrimeField_MultiplicativeInversion(benchmark::State& state, 
 }
 
 BENCHMARK_CAPTURE(
-    BM_PARI_PrimeField_Addition,
+    BM_PrimeField_Addition,
     basic_addition_pari,
     Fp_to_mod(strtoi(numberA.c_str()), strtoi(p.c_str())),
     Fp_to_mod(strtoi(numberB.c_str()), strtoi(p.c_str())),
@@ -51,7 +51,7 @@ BENCHMARK_CAPTURE(
 );
 
 BENCHMARK_CAPTURE(
-    BM_PARI_PrimeField_Multiplication,
+    BM_PrimeField_Multiplication,
     basic_multiplication_pari,
     Fp_to_mod(strtoi(numberA.c_str()), strtoi(p.c_str())),
     Fp_to_mod(strtoi(numberB.c_str()), strtoi(p.c_str())),
@@ -59,7 +59,7 @@ BENCHMARK_CAPTURE(
 );
 
 BENCHMARK_CAPTURE(
-    BM_PARI_PrimeField_Exponentiation,
+    BM_PrimeField_Exponentiation,
     modular_exponentiation_with_not_reduced_exponent_pari,
     Fp_to_mod(strtoi(numberA.c_str()), strtoi(p.c_str())),
     strtoi(benchmarkExponent.c_str()),
@@ -67,7 +67,7 @@ BENCHMARK_CAPTURE(
 );
 
 BENCHMARK_CAPTURE(
-    BM_PARI_PrimeField_Exponentiation,
+    BM_PrimeField_Exponentiation,
     modular_exponentiation_with_reduced_exponent_pari,
     Fp_to_mod(strtoi(numberA.c_str()), strtoi(p.c_str())),
     strtoi(reducedBenchmarkExponent.c_str()),
@@ -75,7 +75,7 @@ BENCHMARK_CAPTURE(
 );
 
 BENCHMARK_CAPTURE(
-    BM_PARI_PrimeField_MultiplicativeInversion,
+    BM_PrimeField_MultiplicativeInversion,
     basic_inverse_pari,
     strtoi(numberA.c_str()),
     strtoi(p.c_str())
