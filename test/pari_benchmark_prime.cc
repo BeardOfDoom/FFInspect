@@ -87,17 +87,14 @@ int main(int argc, char** argv)
     benchmarkDataFile.open("prime_benchmark_data.txt");
 
     getline(benchmarkDataFile, p);
-    cout << p << endl << endl;
 
     getline(benchmarkDataFile, numberA);
-    cout << numberA << endl << endl;
 
     getline(benchmarkDataFile, numberB);
 
     getline(benchmarkDataFile, benchmarkExponent);
 
     getline(benchmarkDataFile, reducedBenchmarkExponent);
-    cout << reducedBenchmarkExponent << endl << endl;
 
     benchmarkDataFile.close();
 
