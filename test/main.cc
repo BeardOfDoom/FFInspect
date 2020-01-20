@@ -81,9 +81,8 @@ int main(int argc, char** argv)
         }
         benchmarkDataFile << polynomialB[polynomialB.size() - 1].coefficient << " " << polynomialB[polynomialB.size() - 1].exponent << endl;
 
+        benchmarkDataFile << scalar << endl;
     }
-
-    benchmarkDataFile << scalar << endl;
 
     benchmarkDataFile << exponent << endl;
 
