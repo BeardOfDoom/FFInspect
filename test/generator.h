@@ -21,4 +21,6 @@ vector<GeneralPolynomialElement> generatePolynomialInField(unsigned int p, unsig
 
 char* generateNumberOfSize(unsigned int bitsize);
 
+char* generateNumberInRange(GEN p);
+
 void initGenerator();

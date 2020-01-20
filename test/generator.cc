@@ -73,6 +73,11 @@ char* generateNumberOfSize(unsigned int bitsize)
     return itostr(addii(baseByBitsize, randomNumber));
 }
 
+char* generateNumberInRange(GEN p)
+{
+    return itostr(randomi(p));
+}
+
 void initGenerator()
 {
     pari_init(2000000000,0);
