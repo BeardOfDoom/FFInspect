@@ -6,34 +6,59 @@ extern "C"
 }
 #include "polymod.h"
 #include <benchmark/benchmark.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <sstream> 
+
+typedef struct GeneralPolynomialElement
+{
+    unsigned int coefficient;
+    unsigned int exponent;
+} GeneralPolynomialElement;
+
 
 Variable x;
-Miracl precision=100;
-miracl *mip=&precision;
+Miracl miraclPrecision=1000;
+miracl *mip=&miraclPrecision;
 
-Big init(Big modulus)
+vector<GeneralPolynomialElement> irreduciblePolynomial;
+vector<GeneralPolynomialElement> polynomialA;
+vector<GeneralPolynomialElement> polynomialB;
+string scalar;
+string benchmarkExponent;
+string reducedBenchmarkExponent;
+
+//GF(p^q) TESTS
+
+//TODO test
+Poly generalPolynomialToMiraclPoly(vector<GeneralPolynomialElement> generalPolynomial)
 {
-  modulo(modulus);
+    Poly miraclPolynomial;
+    for(int i = 0; i < generalPolynomial.size(); i++)
+    {
+        miraclPolynomial += generalPolynomial[i].coefficient * pow(x, generalPolynomial[i].exponent);
+    }
 
-  return modulus;
+    return miraclPolynomial;
 }
 
-//GF(p^m) TESTS
-static void BM_PolynomField_Addition(benchmark::State& state, Poly firstPoly, Poly secondPoly, Big mod)
+static void BM_PolynomField_Addition(benchmark::State& state, Poly firstPoly, Poly secondPoly)
 {
   for (auto _ : state) {
     firstPoly + secondPoly;
   }
 }
 
-static void BM_PolynomField_Scalar_Multiplication(benchmark::State& state, Poly basePoly, Big scalar, Big mod)
+static void BM_PolynomField_Scalar_Multiplication(benchmark::State& state, Poly basePoly, Big scalar)
 {
   for (auto _ : state) {
     scalar * basePoly;
   }
 }
 
-static void BM_PolynomField_Multiplication(benchmark::State& state, Poly modPoly, Poly firstPoly, Poly secondPoly, Big mod)
+static void BM_PolynomField_Multiplication(benchmark::State& state, Poly firstPoly, Poly secondPoly, Poly modPoly)
 {
   setmod(modPoly);
   PolyMod firstPolyMod(firstPoly);
@@ -44,7 +69,7 @@ static void BM_PolynomField_Multiplication(benchmark::State& state, Poly modPoly
   }
 }
 
-static void BM_PolynomField_Exponentiation(benchmark::State& state, Big power, Poly modPoly, Poly basePoly, Big mod)
+static void BM_PolynomField_Exponentiation(benchmark::State& state, Poly basePoly, Big power, Poly modPoly)
 {
   setmod(modPoly);
   PolyMod basePolyMod(basePoly);
@@ -54,7 +79,7 @@ static void BM_PolynomField_Exponentiation(benchmark::State& state, Big power, P
   }
 }
 
-static void BM_PolynomField_MultiplicativeInversion(benchmark::State& state, Poly modPoly, Poly basePoly, Big mod)
+static void BM_PolynomField_MultiplicativeInversion(benchmark::State& state, Poly basePoly, Poly modPoly)
 {
   Poly result[3];
   for (auto _ : state) {
@@ -62,19 +87,109 @@ static void BM_PolynomField_MultiplicativeInversion(benchmark::State& state, Pol
   }
 }
 
-// Register the PolynomField functions as benchmarks
-BENCHMARK_CAPTURE(BM_PolynomField_Addition, basic_addition, pow(x,211)+2*pow(x,200)+pow(x,69)+pow(x,42)+1, pow(x,200)+2*pow(x,104)+pow(x,102)+pow(x,69)+2*pow(x,3)+x+2, init(Big(3)));
+BENCHMARK_CAPTURE(
+    BM_PolynomField_Addition,
+    basic_addition_miracl,
+    generalPolynomialToMiraclPoly(polynomialA),
+    generalPolynomialToMiraclPoly(polynomialB)
+);
 
-BENCHMARK_CAPTURE(BM_PolynomField_Scalar_Multiplication, basic_scalar_multiplication, pow(x,200)+2*pow(x,104)+pow(x,102)+pow(x,69)+2*pow(x,3)+x+2, Big("114257861865478804407304804720106648610243131623383809889090591194231435391573141592655245498184889136485344775587546688876340744597107535063109170063376118857367666310205539214537693468661910927465064887750418137402612425763591725557531218816269330626202829315598574929746122951434029268750863832704892328653114257861865478804407304804720106648610243131623383809889090591194231435391573141592655245498184889136485344775587546688876340744597107535063109170063376118857367666310205539214537693468661910927465064887750418137402612425763591725557531218816269330626202829315598574929746122951434029268750863832704892328653"), init(Big(3)));
+BENCHMARK_CAPTURE(
+    BM_PolynomField_Scalar_Multiplication,
+    basic_scalar_multiplication,
+    generalPolynomialToMiraclPoly(polynomialA),
+    Big((char*)scalar.c_str())
+);
 
-BENCHMARK_CAPTURE(BM_PolynomField_Multiplication, basic_multiplication,  pow(x,263)+2*pow(x,3)+2*pow(x,2)+x+1, pow(x,211)+2*pow(x,200)+pow(x,69)+pow(x,42)+1, pow(x,200)+2*pow(x,104)+pow(x,102)+pow(x,69)+2*pow(x,3)+x+2, init(Big(3)));
+BENCHMARK_CAPTURE(
+    BM_PolynomField_Multiplication,
+    basic_multiplication_miracl,
+    generalPolynomialToMiraclPoly(polynomialA),
+    generalPolynomialToMiraclPoly(polynomialB),
+    generalPolynomialToMiraclPoly(irreduciblePolynomial)
+);
 
-BENCHMARK_CAPTURE(BM_PolynomField_Exponentiation, modular_exponentiation_with_not_reduced_exponent, Big("114257861865478804407304804720106648610243131623383809889090591194231435391573141592655245498184889136485344775587546688876340744597107535063109170063376118857367666310205539214537693468661910927465064887750418137402612425763591725557531218816269330626202829315598574929746122951434029268750863832704892328653"), pow(x,263)+2*pow(x,3)+2*pow(x,2)+x+1, pow(x,200)+2*pow(x,104)+pow(x,102)+pow(x,69)+2*pow(x,3)+x+2, init(Big(3)));
+BENCHMARK_CAPTURE(
+    BM_PolynomField_Exponentiation,
+    modular_exponentiation_with_not_reduced_exponent_miracl,
+    generalPolynomialToMiraclPoly(polynomialA),
+    Big((char*)benchmarkExponent.c_str()),
+    generalPolynomialToMiraclPoly(irreduciblePolynomial)
+);
 
-BENCHMARK_CAPTURE(BM_PolynomField_Exponentiation, modular_exponentiation_with_reduced_exponent, Big("267958267864893013072272255214324825478678748460938376995848570678440230157915342322621691247283190482984938504887672817472893"), pow(x,263)+2*pow(x,3)+2*pow(x,2)+x+1, pow(x,200)+2*pow(x,104)+pow(x,102)+pow(x,69)+2*pow(x,3)+x+2, init(Big(3)));
+BENCHMARK_CAPTURE(
+    BM_PolynomField_Exponentiation,
+    modular_exponentiation_with_reduced_exponent_miracl,
+    generalPolynomialToMiraclPoly(polynomialA),
+    Big((char*)reducedBenchmarkExponent.c_str()),
+    generalPolynomialToMiraclPoly(irreduciblePolynomial)
+);
 
-BENCHMARK_CAPTURE(BM_PolynomField_MultiplicativeInversion, basic_inverse, pow(x,263)+2*pow(x,3)+2*pow(x,2)+x+1, pow(x,200)+2*pow(x,104)+pow(x,102)+pow(x,69)+2*pow(x,3)+x+2, init(Big(3)));
+BENCHMARK_CAPTURE(
+    BM_PolynomField_MultiplicativeInversion,
+    basic_inverse_miracl,
+    generalPolynomialToMiraclPoly(polynomialA),
+    generalPolynomialToMiraclPoly(irreduciblePolynomial)
+);
 
+int main(int argc, char** argv)
+{
+    int coefficient, exponent;
+    string tmp, polynomialString;
+    stringstream polynomialStringStream;
 
-// Run the benchmark
-BENCHMARK_MAIN();
+    ifstream benchmarkDataFile;
+    benchmarkDataFile.open("benchmark_data.txt");
+
+    int p;
+    benchmarkDataFile >> p;
+
+    int q;
+    benchmarkDataFile >> q;
+    getline(benchmarkDataFile, tmp);
+
+    polynomialString = "";
+    getline(benchmarkDataFile, polynomialString);
+    polynomialStringStream << polynomialString;
+    while(!polynomialStringStream.eof())
+    {
+        polynomialStringStream >> coefficient;
+        polynomialStringStream >> exponent;
+        irreduciblePolynomial.push_back({coefficient, exponent});
+    }
+    polynomialStringStream.clear();
+
+    polynomialString = "";
+    getline(benchmarkDataFile, polynomialString);
+    polynomialStringStream << polynomialString;
+    while(!polynomialStringStream.eof())
+    {
+        polynomialStringStream >> coefficient;
+        polynomialStringStream >> exponent;
+        polynomialA.push_back({coefficient, exponent});
+    }
+    polynomialStringStream.clear();
+
+    polynomialString = "";
+    getline(benchmarkDataFile, polynomialString);
+    polynomialStringStream << polynomialString;
+    while(!polynomialStringStream.eof())
+    {
+        polynomialStringStream >> coefficient;
+        polynomialStringStream >> exponent;
+        polynomialB.push_back({coefficient, exponent});
+    }
+    polynomialStringStream.clear();
+    
+    getline(benchmarkDataFile, scalar);
+
+    getline(benchmarkDataFile, benchmarkExponent);
+
+    getline(benchmarkDataFile, reducedBenchmarkExponent);
+
+    benchmarkDataFile.close();
+
+    modulo(Big(p));
+    ::benchmark::Initialize(&argc, argv);
+    ::benchmark::RunSpecifiedBenchmarks();
+}
