@@ -67,14 +67,14 @@ static void BM_PolynomField2_MultiplicativeInversion(benchmark::State& state, GE
 
 BENCHMARK_CAPTURE(
     BM_PolynomField2_Addition,
-    basic_addition,
+    basic_addition_pari,
     generalPolynomialToPariPolynomial(polynomialA),
     generalPolynomialToPariPolynomial(polynomialB)
 );
 
 BENCHMARK_CAPTURE(
     BM_PolynomField2_Multiplication,
-    basic_multiplication,
+    basic_multiplication_pari,
     generalPolynomialToPariPolynomial(polynomialA),
     generalPolynomialToPariPolynomial(polynomialB),
     generalPolynomialToPariPolynomial(irreduciblePolynomial)
@@ -82,7 +82,7 @@ BENCHMARK_CAPTURE(
 
 BENCHMARK_CAPTURE(
     BM_PolynomField2_Exponentiation,
-    modular_exponentiation_with_not_reduced_exponent,
+    modular_exponentiation_with_not_reduced_exponent_pari,
     generalPolynomialToPariPolynomial(polynomialA),
     strtoi(benchmarkExponent.c_str()),
     generalPolynomialToPariPolynomial(irreduciblePolynomial)
@@ -90,7 +90,7 @@ BENCHMARK_CAPTURE(
 
 BENCHMARK_CAPTURE(
     BM_PolynomField2_Exponentiation,
-    modular_exponentiation_with_reduced_exponent,
+    modular_exponentiation_with_reduced_exponent_pari,
     generalPolynomialToPariPolynomial(polynomialA),
     strtoi(reducedBenchmarkExponent.c_str()),
     generalPolynomialToPariPolynomial(irreduciblePolynomial)
@@ -98,7 +98,7 @@ BENCHMARK_CAPTURE(
 
 BENCHMARK_CAPTURE(
     BM_PolynomField2_MultiplicativeInversion,
-    basic_inverse,
+    basic_inverse_pari,
     generalPolynomialToPariPolynomial(polynomialA),
     generalPolynomialToPariPolynomial(irreduciblePolynomial)
 );
