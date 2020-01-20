@@ -1,3 +1,5 @@
+//g++ generator.cc main.cc -I./ -lpari
+
 #include "generator.h"
 #include <iostream>
 #include <fstream>
