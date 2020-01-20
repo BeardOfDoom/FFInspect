@@ -2,13 +2,15 @@ echo '--------------------------------------------------------------------'
 echo 'START BOOTSTRAP'
 echo '--------------------------------------------------------------------'
 
+export DEBIAN_FRONTEND=noninteractive
+
 echo '--------------------------------------------------------------------'
 echo 'START PREINSTALLS'
 echo '--------------------------------------------------------------------'
 
 sudo apt update
 
-sudo apt install gcc cmake clang g++ gcc-multilib g++-multilib build-essential git libboost-all-dev libgmp3-dev libgmp-dev libssl-dev libprocps-dev pkg-config perl unzip -y
+sudo apt install gcc cmake clang g++ gcc-multilib g++-multilib build-essential git libboost-all-dev libgmp3-dev libgmp-dev libssl-dev libprocps-dev pkg-config perl unzip c++11 -y
 
 echo '--------------------------------------------------------------------'
 echo 'START MIRACL INSTALL'
@@ -86,9 +88,8 @@ echo '--------------------------------------------------------------------'
 echo 'START GOOGLE BENCHMARK INSTALL'
 echo '--------------------------------------------------------------------'
 
-install google benchmark
 git clone https://github.com/google/benchmark.git
-git clone https://github.com/google/googletest.git benchmark/googletest
+git clone --branch v1.8.x https://github.com/google/googletest.git benchmark/googletest
 cd benchmark
 mkdir build && cd build
 sudo cmake ../
