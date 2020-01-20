@@ -37,22 +37,22 @@ char* generatePrimeOfSize(unsigned int bitsize)
             randomNumber = randomi(baseByBitsize); 
             randomNumberByBitsize = addii(baseByBitsize, randomNumber);
 
-            if(umodiu(randomNumberByBitsize, 2) != 0)
+            if(umodiu(randomNumberByBitsize, 2) == 0)
             {
                 if(cmpiu(randomNumber, 0) > 0)
                 {
-                    subiu(randomNumberByBitsize, 1);
+                    randomNumberByBitsize = subiu(randomNumberByBitsize, 1);
                 }
                 else
                 {
-                    addiu(randomNumberByBitsize, 1);
+                    randomNumberByBitsize = addiu(randomNumberByBitsize, 1);
                 }
             }
         }
 
         isPrime = isprime(randomNumberByBitsize);
 
-        subiu(randomNumberByBitsize, 2);
+        randomNumberByBitsize = subiu(randomNumberByBitsize, 2);
     }while(!isPrime);
 
     return itostr(randomNumberByBitsize);
