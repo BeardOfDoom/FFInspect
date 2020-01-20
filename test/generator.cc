@@ -50,9 +50,9 @@ char* generatePrimeOfSize(unsigned int bitsize)
             }
         }
 
-        isPrime = isprime(randomNumberByBitsize);
-
         randomNumberByBitsize = subiu(randomNumberByBitsize, 2);
+        
+        isPrime = isprime(randomNumberByBitsize);
     }while(!isPrime);
 
     return itostr(randomNumberByBitsize);
