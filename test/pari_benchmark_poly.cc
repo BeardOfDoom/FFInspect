@@ -2,34 +2,47 @@
 
 #include <pari/pari.h>
 #include <benchmark/benchmark.h>
+#include <iostream>
+#include <fstream>
 #include <vector>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
-typedef struct MyPolyTypeElement
+typedef struct GeneralPolynomialElement
 {
-    GEN coefficient;
-    int exponent;
-} MyPolyTypeElement;
+    unsigned int coefficient;
+    unsigned int exponent;
+} GeneralPolynomialElement;
 
-GEN mymkpoln(vector<MyPolyTypeElement> polyElements)
+int p;
+int q;
+vector<GeneralPolynomialElement> irreduciblePolynomial;
+vector<GeneralPolynomialElement> polynomialA;
+vector<GeneralPolynomialElement> polynomialB;
+string scalar;
+string benchmarkExponent;
+string reducedBenchmarkExponent;
+
+GEN generalPolynomialToPariPolynomial(vector<GeneralPolynomialElement> generalPolynomial)
 {
     GEN x, y;
-    long degree = polyElements[0].exponent;
+    long degree = generalPolynomial[0].exponent;
     long l = degree+3;
     x = cgetg(l, t_POL); y = x + 2;
     x[1] = evalvarn(0);
 
-    int lastExponent = polyElements[0].exponent;
-    gel(y,lastExponent) = polyElements[0].coefficient;
-    for(int i = 1; i < polyElements.size(); i++)
+    int lastExponent = generalPolynomial[0].exponent;
+    gel(y,lastExponent) = utoi(generalPolynomial[0].coefficient);
+    for(int i = 1; i < generalPolynomial.size(); i++)
     {
-        for(int j = lastExponent - 1; j > polyElements[i].exponent; j--)
+        for(int j = lastExponent - 1; j > generalPolynomial[i].exponent; j--)
         {
             gel(y,j) = gen_0;
         }
-        lastExponent = polyElements[i].exponent;
-        gel(y,lastExponent) = polyElements[i].coefficient;
+        lastExponent = generalPolynomial[i].exponent;
+        gel(y,lastExponent) = utoi(generalPolynomial[i].coefficient);
     }
     if(lastExponent != 0)
     {
@@ -83,59 +96,113 @@ static void BM_PolynomField_MultiplicativeInversion(benchmark::State& state, GEN
 
 BENCHMARK_CAPTURE(
     BM_PolynomField_Addition,
-    basic_addition,
-    mymkpoln({{gen_1, 211}, {gen_2, 200}, {gen_1, 69}, {gen_1, 42}, {gen_1, 0}}),
-    mymkpoln({{gen_1, 200}, {gen_2, 104}, {gen_1, 102}, {gen_1, 69}, {gen_2, 3}, {gen_1, 1}, {gen_2, 0}}),
-    strtoi("3")
+    basic_addition_pari,
+    generalPolynomialToPariPolynomial(polynomialA),
+    generalPolynomialToPariPolynomial(polynomialB),
+    utoi(p)
 );
 
 BENCHMARK_CAPTURE(
     BM_PolynomField_Scalar_Multiplication, 
-    basic_scalar_multiplication,
-    mymkpoln({{gen_1, 200}, {gen_2, 104}, {gen_1, 102}, {gen_1, 69}, {gen_2, 3}, {gen_1, 1}, {gen_2, 0}}),
-    strtoi("114257861865478804407304804720106648610243131623383809889090591194231435391573141592655245498184889136485344775587546688876340744597107535063109170063376118857367666310205539214537693468661910927465064887750418137402612425763591725557531218816269330626202829315598574929746122951434029268750863832704892328653114257861865478804407304804720106648610243131623383809889090591194231435391573141592655245498184889136485344775587546688876340744597107535063109170063376118857367666310205539214537693468661910927465064887750418137402612425763591725557531218816269330626202829315598574929746122951434029268750863832704892328653"),
-    strtoi("3")
+    basic_scalar_multiplication_pari,
+    generalPolynomialToPariPolynomial(polynomialA),
+    strtoi(scalar.c_str()),
+    utoi(p)
 );
 
 BENCHMARK_CAPTURE(
     BM_PolynomField_Multiplication,
-    basic_multiplication,
-    mymkpoln({{gen_1, 211}, {gen_2, 200}, {gen_1, 69}, {gen_1, 42}, {gen_1, 0}}),
-    mymkpoln({{gen_1, 200}, {gen_2, 104}, {gen_1, 102}, {gen_1, 69}, {gen_2, 3}, {gen_1, 1}, {gen_2, 0}}),
-    mymkpoln({{gen_1, 263}, {gen_2, 3}, {gen_2, 2}, {gen_1, 1}, {gen_1, 0}}),
-    strtoi("3")
+    basic_multiplication_pari,
+    generalPolynomialToPariPolynomial(polynomialA),
+    generalPolynomialToPariPolynomial(polynomialB),
+    generalPolynomialToPariPolynomial(irreduciblePolynomial),
+    utoi(p)
 );
 
 
 BENCHMARK_CAPTURE(
     BM_PolynomField_Exponentiation,
-    modular_exponentiation_with_not_reduced_exponent,
-    mymkpoln({{gen_1, 200}, {gen_2, 104}, {gen_1, 102}, {gen_1, 69}, {gen_2, 3}, {gen_1, 1}, {gen_2, 0}}),
-    strtoi("114257861865478804407304804720106648610243131623383809889090591194231435391573141592655245498184889136485344775587546688876340744597107535063109170063376118857367666310205539214537693468661910927465064887750418137402612425763591725557531218816269330626202829315598574929746122951434029268750863832704892328653"),
-    mymkpoln({{gen_1, 263}, {gen_2, 3}, {gen_2, 2}, {gen_1, 1}, {gen_1, 0}}),
-    strtoi("3")
+    modular_exponentiation_with_not_reduced_exponent_pari,
+    generalPolynomialToPariPolynomial(polynomialA),
+    strtoi(benchmarkExponent.c_str()),
+    generalPolynomialToPariPolynomial(irreduciblePolynomial),
+    utoi(p)
 );
 
 BENCHMARK_CAPTURE(
     BM_PolynomField_Exponentiation,
-    modular_exponentiation_with_reduced_exponent,
-    mymkpoln({{gen_1, 200}, {gen_2, 104}, {gen_1, 102}, {gen_1, 69}, {gen_2, 3}, {gen_1, 1}, {gen_2, 0}}),
-    strtoi("267958267864893013072272255214324825478678748460938376995848570678440230157915342322621691247283190482984938504887672817472893"),
-    mymkpoln({{gen_1, 263}, {gen_2, 3}, {gen_2, 2}, {gen_1, 1}, {gen_1, 0}}),
-    strtoi("3")
+    modular_exponentiation_with_reduced_exponent_pari,
+    generalPolynomialToPariPolynomial(polynomialA),
+    strtoi(reducedBenchmarkExponent.c_str()),
+    generalPolynomialToPariPolynomial(irreduciblePolynomial),
+    utoi(p)
 );
 
 BENCHMARK_CAPTURE(
     BM_PolynomField_MultiplicativeInversion,
-    basic_inverse,
-    mymkpoln({{gen_1, 200}, {gen_2, 104}, {gen_1, 102}, {gen_1, 69}, {gen_2, 3}, {gen_1, 1}, {gen_2, 0}}),
-    mymkpoln({{gen_1, 263}, {gen_2, 3}, {gen_2, 2}, {gen_1, 1}, {gen_1, 0}}),
-    strtoi("3")
+    basic_inverse_pari,
+    generalPolynomialToPariPolynomial(polynomialA),
+    generalPolynomialToPariPolynomial(irreduciblePolynomial),
+    utoi(p)
 );
 
 int main(int argc, char** argv)
 {
-   pari_init(2000000000,0);
-   ::benchmark::Initialize(&argc, argv);
-   ::benchmark::RunSpecifiedBenchmarks();
+    int coefficient, exponent;
+    string tmp, polynomialString;
+    stringstream polynomialStringStream;
+
+    ifstream benchmarkDataFile;
+    benchmarkDataFile.open("benchmark_data.txt");
+
+    benchmarkDataFile >> p;
+
+    benchmarkDataFile >> q;
+
+    getline(benchmarkDataFile, tmp);
+
+    polynomialString = "";
+    getline(benchmarkDataFile, polynomialString);
+    polynomialStringStream << polynomialString;
+    while(!polynomialStringStream.eof())
+    {
+        polynomialStringStream >> coefficient;
+        polynomialStringStream >> exponent;
+        irreduciblePolynomial.push_back({coefficient, exponent});
+    }
+    polynomialStringStream.clear();
+
+    polynomialString = "";
+    getline(benchmarkDataFile, polynomialString);
+    polynomialStringStream << polynomialString;
+    while(!polynomialStringStream.eof())
+    {
+        polynomialStringStream >> coefficient;
+        polynomialStringStream >> exponent;
+        polynomialA.push_back({coefficient, exponent});
+    }
+    polynomialStringStream.clear();
+
+    polynomialString = "";
+    getline(benchmarkDataFile, polynomialString);
+    polynomialStringStream << polynomialString;
+    while(!polynomialStringStream.eof())
+    {
+        polynomialStringStream >> coefficient;
+        polynomialStringStream >> exponent;
+        polynomialB.push_back({coefficient, exponent});
+    }
+    polynomialStringStream.clear();
+    
+    getline(benchmarkDataFile, scalar);
+
+    getline(benchmarkDataFile, benchmarkExponent);
+
+    getline(benchmarkDataFile, reducedBenchmarkExponent);
+
+    benchmarkDataFile.close();
+
+    pari_init(2000000000,0);
+    ::benchmark::Initialize(&argc, argv);
+    ::benchmark::RunSpecifiedBenchmarks();
 }
