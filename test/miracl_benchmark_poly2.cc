@@ -12,12 +12,13 @@ extern "C"
 #include <string>
 #include <sstream>
 
+using namespace std;
+
 typedef struct GeneralPolynomialElement
 {
     unsigned int coefficient;
     unsigned int exponent;
 } GeneralPolynomialElement;
-
 
 Variable x;
 Miracl miraclPrecision=1000;
@@ -173,7 +174,7 @@ int main(int argc, char** argv)
   benchmarkDataFile.close();
 
   //this is stupid, but necessary...
-  modulo(q, 55, 33, 2, FALSE);
+  modulo(q, 3, 2, 1, FALSE);
   ::benchmark::Initialize(&argc, argv);
   ::benchmark::RunSpecifiedBenchmarks();
 }
